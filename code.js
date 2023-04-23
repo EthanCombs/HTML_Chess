@@ -1,11 +1,13 @@
 const board = document.getElementById("chess-board");
-var previousSquare;
-var previousLastSquare;
-var lastSquare;
+var previousSquare; // previous move end square
+var previousLastSquare; // previous move start square
+var lastSquare; // start square
+var square; // end square
 var whiteTurn = true;
 board.addEventListener(`click`, (ev) =>
 {
-    var square = ev.target;
+    square = ev.target;
+    // Shows possible moves
     if (square.style.backgroundColor != "yellow")
     {
         resetBoardColor();
@@ -335,6 +337,7 @@ board.addEventListener(`click`, (ev) =>
             }
         }
     }
+    // Makes move
     else
     {
         // En passant
@@ -342,8 +345,11 @@ board.addEventListener(`click`, (ev) =>
         {
             previousSquare.innerText = ``;
         }
+
+        // Moves piece
         square.innerText = lastSquare.innerText;
         lastSquare.innerText = ``;
+
         // White Castle long
         if (square.innerText == `♔` && square.id == `31`)
         {
@@ -370,6 +376,21 @@ board.addEventListener(`click`, (ev) =>
             document.getElementById(`88`).innerText = ``;
             document.getElementById(`68`).innerText = `♜`;
         }
+
+        // White pawn promotion
+        if (square.innerText == `♙` && square.id.substring(1,2) == `8`)
+        {
+            // Need to add promotion popup here
+            square.innerText = `♕`;
+        }
+        // Black pawn promotion
+        if ( square.innerText == `♟` && square.id.substring(1,2) == `1`)
+        {
+            // Need to add promotion popup here
+            square.innerText = `♛`;
+        }
+
+        // Variable/class updates
         if (lastSquare.classList.contains(`hasNotMoved`))
         {
             lastSquare.classList.remove(`hasNotMoved`);
@@ -399,6 +420,7 @@ board.addEventListener(`click`, (ev) =>
         resetBoardColor();
     }
 });
+
 const resetBoardColor = () =>
 {
     for (i = 1; i < 9; i++)
@@ -533,6 +555,7 @@ const testSquares = (startX, startY, endX, endY, piece) =>
     }
     return true;
 }
+
 const canMove = (absX, absY, piece) =>
 {
     return ((absX / absY == 1 && (piece == `b` || piece == `q`)) ||  ((absX > 0 && absY == 0 || absX == 0 && absY > 0) && (piece == `r` || piece == `q`)))
