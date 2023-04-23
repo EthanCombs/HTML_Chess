@@ -362,19 +362,25 @@ board.addEventListener(`click`, (ev) =>
         if (square.innerText == `♔` && square.id == `71`)
         {
             document.getElementById(`81`).innerText = ``;
+            document.getElementById(`81`).classList.remove(`white`);
             document.getElementById(`61`).innerText = `♖`;
+            document.getElementById(`61`).classList.add(`white`);
         }
         // Black Castle long
         if (square.innerText == `♚` && square.id == `38`)
         {
             document.getElementById(`18`).innerText = ``;
+            document.getElementById(`18`).classList.remove(`black`);
             document.getElementById(`48`).innerText = `♜`;
+            document.getElementById(`48`).classList.add(`black`);
         }
         // Black Castle short
         if (square.innerText == `♚` && square.id == `78`)
         {
             document.getElementById(`88`).innerText = ``;
+            document.getElementById(`88`).classList.remove(`black`);
             document.getElementById(`68`).innerText = `♜`;
+            document.getElementById(`68`).classList.add(`black`);
         }
 
         // White pawn promotion
