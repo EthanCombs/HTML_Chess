@@ -1,4 +1,6 @@
 const board = document.getElementById("chess-board");
+var previousSquare;
+var previousLastSquare;
 var lastSquare;
 var whiteTurn = true;
 board.addEventListener(`click`, (ev) =>
@@ -23,6 +25,8 @@ board.addEventListener(`click`, (ev) =>
                 var tempSquare2 = document.getElementById(`${startX}${tempY2}`);
                 var tempSquare3 = document.getElementById(`${tempX1}${tempY1}`);
                 var tempSquare4 = document.getElementById(`${tempX2}${tempY1}`);
+                var tempSquare5 = document.getElementById(`${tempX1}${startY}`);
+                var tempSquare6 = document.getElementById(`${tempX2}${startY}`);
                 square.style.backgroundColor = "blue";
                 if (tempSquare1.innerText == ``)
                 {
@@ -37,6 +41,14 @@ board.addEventListener(`click`, (ev) =>
                     tempSquare3.style.backgroundColor = "yellow";
                 }
                 if (tempSquare4.classList.contains(`black`))
+                {
+                    tempSquare4.style.backgroundColor = "yellow";
+                }
+                if (tempSquare5.innerText == `♟` && previousSquare.id == tempSquare5.id && previousLastSquare.id.substring(1,2) == `7`)
+                {
+                    tempSquare3.style.backgroundColor = "yellow";
+                }
+                if (tempSquare6.innerText == `♟` && previousSquare.id == tempSquare6.id && previousLastSquare.id.substring(1,2) == `7`)
                 {
                     tempSquare4.style.backgroundColor = "yellow";
                 }
@@ -175,12 +187,14 @@ board.addEventListener(`click`, (ev) =>
                 var tempSquare2 = document.getElementById(`${startX}${tempY2}`);
                 var tempSquare3 = document.getElementById(`${tempX1}${tempY1}`);
                 var tempSquare4 = document.getElementById(`${tempX2}${tempY1}`);
+                var tempSquare5 = document.getElementById(`${tempX1}${startY}`);
+                var tempSquare6 = document.getElementById(`${tempX2}${startY}`);
                 square.style.backgroundColor = "blue";
                 if (tempSquare1.innerText == ``)
                 {
                     tempSquare1.style.backgroundColor = "yellow";
                 }
-                if (tempSquare1.innerText == `` && square.id.substring(1,2) == `7`)
+                if (tempSquare2.innerText == `` && square.id.substring(1,2) == `7`)
                 {
                     tempSquare2.style.backgroundColor = "yellow";
                 }
@@ -189,6 +203,14 @@ board.addEventListener(`click`, (ev) =>
                     tempSquare3.style.backgroundColor = "yellow";
                 }
                 if (tempSquare4.classList.contains(`white`))
+                {
+                    tempSquare4.style.backgroundColor = "yellow";
+                }
+                if (tempSquare5.innerText == `♙` && previousSquare.id == tempSquare5.id && previousLastSquare.id.substring(1,2) == `2`)
+                {
+                    tempSquare3.style.backgroundColor = "yellow";
+                }
+                if (tempSquare6.innerText == `♙` && previousSquare.id == tempSquare6.id && previousLastSquare.id.substring(1,2) == `2`)
                 {
                     tempSquare4.style.backgroundColor = "yellow";
                 }
@@ -315,8 +337,14 @@ board.addEventListener(`click`, (ev) =>
     }
     else
     {
+        // En passant
+        if ((lastSquare.innerText == `♙` || lastSquare.innerText == `♟`) && square.innerText == `` && lastSquare.id.substring(0,1) != square.id.substring(0,1))
+        {
+            previousSquare.innerText = ``;
+        }
         square.innerText = lastSquare.innerText;
         lastSquare.innerText = ``;
+        // White Castle long
         if (square.innerText == `♔` && square.id == `31`)
         {
             document.getElementById(`11`).innerText = ``;
@@ -324,16 +352,19 @@ board.addEventListener(`click`, (ev) =>
             document.getElementById(`41`).innerText = `♖`;
             document.getElementById(`41`).classList.add(`white`);
         }
+        // White Castle short
         if (square.innerText == `♔` && square.id == `71`)
         {
             document.getElementById(`81`).innerText = ``;
             document.getElementById(`61`).innerText = `♖`;
         }
+        // Black Castle long
         if (square.innerText == `♚` && square.id == `38`)
         {
             document.getElementById(`18`).innerText = ``;
             document.getElementById(`48`).innerText = `♜`;
         }
+        // Black Castle short
         if (square.innerText == `♚` && square.id == `78`)
         {
             document.getElementById(`88`).innerText = ``;
@@ -363,6 +394,8 @@ board.addEventListener(`click`, (ev) =>
             }
             whiteTurn = true;
         }
+        previousLastSquare = lastSquare;
+        previousSquare = square;
         resetBoardColor();
     }
 });
