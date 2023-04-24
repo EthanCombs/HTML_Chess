@@ -4,6 +4,7 @@ var previousLastSquare; // previous move start square
 var lastSquare; // start square
 var square; // end square
 var whiteTurn = true;
+var takenPieces = [];
 board.addEventListener(`click`, (ev) =>
 {
     square = ev.target;
@@ -33,24 +34,24 @@ board.addEventListener(`click`, (ev) =>
                 if (tempSquare1.innerText == ``)
                 {
                     tempSquare1.style.backgroundColor = "yellow";
+                    if (tempSquare2.innerText == `` && square.id.substring(1,2) == `2`)
+                    {
+                        tempSquare2.style.backgroundColor = "yellow";
+                    }
                 }
-                if (tempSquare1.innerText == `` && square.id.substring(1,2) == `2`)
-                {
-                    tempSquare2.style.backgroundColor = "yellow";
-                }
-                if (tempSquare3.classList.contains(`black`))
+                if (tempX1 < 9 && tempSquare3.classList.contains(`black`))
                 {
                     tempSquare3.style.backgroundColor = "yellow";
                 }
-                if (tempSquare4.classList.contains(`black`))
+                if (tempX2 > 0 && tempSquare4.classList.contains(`black`))
                 {
                     tempSquare4.style.backgroundColor = "yellow";
                 }
-                if (tempSquare5.innerText == `♟` && previousSquare.id == tempSquare5.id && previousLastSquare.id.substring(1,2) == `7`)
+                if (tempX1 < 9 && tempSquare5.innerText == `♟` && previousSquare.id == tempSquare5.id && previousLastSquare.id.substring(1,2) == `7`)
                 {
                     tempSquare3.style.backgroundColor = "yellow";
                 }
-                if (tempSquare6.innerText == `♟` && previousSquare.id == tempSquare6.id && previousLastSquare.id.substring(1,2) == `7`)
+                if (tempX2 > 0 && tempSquare6.innerText == `♟` && previousSquare.id == tempSquare6.id && previousLastSquare.id.substring(1,2) == `7`)
                 {
                     tempSquare4.style.backgroundColor = "yellow";
                 }
@@ -195,24 +196,24 @@ board.addEventListener(`click`, (ev) =>
                 if (tempSquare1.innerText == ``)
                 {
                     tempSquare1.style.backgroundColor = "yellow";
+                    if (tempSquare2.innerText == `` && square.id.substring(1,2) == `7`)
+                    {
+                        tempSquare2.style.backgroundColor = "yellow";
+                    }
                 }
-                if (tempSquare2.innerText == `` && square.id.substring(1,2) == `7`)
-                {
-                    tempSquare2.style.backgroundColor = "yellow";
-                }
-                if (tempSquare3.classList.contains(`white`))
+                if (tempX1 < 9 && tempSquare3.classList.contains(`white`))
                 {
                     tempSquare3.style.backgroundColor = "yellow";
                 }
-                if (tempSquare4.classList.contains(`white`))
+                if (tempX2 > 0 && tempSquare4.classList.contains(`white`))
                 {
                     tempSquare4.style.backgroundColor = "yellow";
                 }
-                if (tempSquare5.innerText == `♙` && previousSquare.id == tempSquare5.id && previousLastSquare.id.substring(1,2) == `2`)
+                if (tempX1 < 9 && tempSquare5.innerText == `♙` && previousSquare.id == tempSquare5.id && previousLastSquare.id.substring(1,2) == `2`)
                 {
                     tempSquare3.style.backgroundColor = "yellow";
                 }
-                if (tempSquare6.innerText == `♙` && previousSquare.id == tempSquare6.id && previousLastSquare.id.substring(1,2) == `2`)
+                if (tempX2 > 0 && tempSquare6.innerText == `♙` && previousSquare.id == tempSquare6.id && previousLastSquare.id.substring(1,2) == `2`)
                 {
                     tempSquare4.style.backgroundColor = "yellow";
                 }
@@ -347,8 +348,24 @@ board.addEventListener(`click`, (ev) =>
         }
 
         // Moves piece
+        if (square.innerText != ``)
+        {
+            takenPieces[takenPieces.length] = square.innerText;
+        }
         square.innerText = lastSquare.innerText;
         lastSquare.innerText = ``;
+
+        // Checks for win
+        if (takenPieces[length - 1] == `♔`)
+        {
+            alert(`Black wins!`);
+            location.reload();
+        }
+        if (takenPieces[length - 1] == `♚`)
+        {
+            alert(`White wins!`);
+            location.reload();
+        }
 
         // White Castle long
         if (square.innerText == `♔` && square.id == `31`)
