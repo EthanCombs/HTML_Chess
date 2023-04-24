@@ -583,3 +583,17 @@ const canMove = (absX, absY, piece) =>
 {
     return ((absX / absY == 1 && (piece == `b` || piece == `q`)) ||  ((absX > 0 && absY == 0 || absX == 0 && absY > 0) && (piece == `r` || piece == `q`)))
 }
+
+function openForm()
+{
+   promotion = true;
+   document.getElementById("popupForm").style.display = "block";
+}
+function closeForm()
+{
+   document.getElementById("popupForm").style.display = "none";
+}
+function promotePiece(piece)
+{
+   square.innerText = piece;
+}
