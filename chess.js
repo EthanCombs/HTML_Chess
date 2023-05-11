@@ -10,6 +10,7 @@ var rect = square.getBoundingClientRect();
 var centerX = (rect.left + rect.right) / 2 - 521.5;
 var centerY = (rect.top + rect.bottom) / 2 + 197;
 const h3 = document.querySelector(`h3`);
+var moved;
 
 board.addEventListener(`click`, (ev) =>
 {
@@ -38,7 +39,7 @@ board.addEventListener(`click`, (ev) =>
                     var tempSquare4 = document.getElementById(`${tempX2}${tempY1}`);
                     var tempSquare5 = document.getElementById(`${tempX1}${startY}`);
                     var tempSquare6 = document.getElementById(`${tempX2}${startY}`);
-                    if (tempSquare1.innerText == ``)
+                    if (tempSquare1.innerText == `` && validMove(square, tempSquare1))
                     {
                         overlayDot(tempSquare1);
                         if (tempSquare2.innerText == `` && square.id.substring(1,2) == `2`)
@@ -46,19 +47,19 @@ board.addEventListener(`click`, (ev) =>
                             overlayDot(tempSquare2);
                         }
                     }
-                    if (tempX1 < 9 && tempSquare3.classList.contains(`black`))
+                    if (tempX1 < 9 && tempSquare3.classList.contains(`black`) && validMove(square, tempSquare3))
                     {
                         overlayDot(tempSquare3);
                     }
-                    if (tempX2 > 0 && tempSquare4.classList.contains(`black`))
+                    if (tempX2 > 0 && tempSquare4.classList.contains(`black`) && validMove(square, tempSquare4))
                     {
                         overlayDot(tempSquare4);
                     }
-                    if (tempX1 < 9 && tempSquare5.innerText == `♟` && previousSquare.id == tempSquare5.id && previousLastSquare.id.substring(1,2) == `7`)
+                    if (tempX1 < 9 && tempSquare5.innerText == `♟` && previousSquare.id == tempSquare5.id && previousLastSquare.id.substring(1,2) == `7` && validMove(square, tempSquare3))
                     {
                         overlayDot(tempSquare3);
                     }
-                    if (tempX2 > 0 && tempSquare6.innerText == `♟` && previousSquare.id == tempSquare6.id && previousLastSquare.id.substring(1,2) == `7`)
+                    if (tempX2 > 0 && tempSquare6.innerText == `♟` && previousSquare.id == tempSquare6.id && previousLastSquare.id.substring(1,2) == `7` && validMove(square, tempSquare4))
                     {
                         overlayDot(tempSquare4);
                     }
@@ -75,7 +76,7 @@ board.addEventListener(`click`, (ev) =>
                             var x = Math.abs(startX - i);
                             var y = Math.abs(startY - j);
                             var tempSquare1 = document.getElementById(`${i}${j}`);
-                            if (x * y == 2 && !tempSquare1.classList.contains(`white`))
+                            if (x * y == 2 && !tempSquare1.classList.contains(`white`) && validMove(square, tempSquare1))
                             {
                                 overlayDot(tempSquare1);
                             }
@@ -94,7 +95,7 @@ board.addEventListener(`click`, (ev) =>
                             var x = Math.abs(startX - i);
                             var y = Math.abs(startY - j);
                             var tempSquare1 = document.getElementById(`${i}${j}`);
-                            if (canMove(x, y, `♗`) && testSquares(startX, startY, i, j, `♗`) && !tempSquare1.classList.contains(`white`))
+                            if (canMove(x, y, `♗`) && testSquares(startX, startY, i, j, `♗`) && !tempSquare1.classList.contains(`white`) && validMove(square, tempSquare1))
                             {
                                 overlayDot(tempSquare1);
                             }
@@ -113,7 +114,7 @@ board.addEventListener(`click`, (ev) =>
                             var x = Math.abs(startX - i);
                             var y = Math.abs(startY - j);
                             var tempSquare1 = document.getElementById(`${i}${j}`);
-                            if (canMove(x, y, `♖`) && testSquares(startX, startY, i, j, `♖`) && !tempSquare1.classList.contains(`white`))
+                            if (canMove(x, y, `♖`) && testSquares(startX, startY, i, j, `♖`) && !tempSquare1.classList.contains(`white`) && validMove(square, tempSquare1))
                             {
                                 overlayDot(tempSquare1);
                             }
@@ -132,7 +133,7 @@ board.addEventListener(`click`, (ev) =>
                             var x = Math.abs(startX - i);
                             var y = Math.abs(startY - j);
                             var tempSquare1 = document.getElementById(`${i}${j}`);
-                            if (canMove(x, y, `♕`) && testSquares(startX, startY, i, j, `♕`) && !tempSquare1.classList.contains(`white`))
+                            if (canMove(x, y, `♕`) && testSquares(startX, startY, i, j, `♕`) && !tempSquare1.classList.contains(`white`) && validMove(square, tempSquare1))
                             {
                                 overlayDot(tempSquare1);
                             }
@@ -151,7 +152,7 @@ board.addEventListener(`click`, (ev) =>
                             var x = Math.abs(startX - i);
                             var y = Math.abs(startY - j);
                             var tempSquare1 = document.getElementById(`${i}${j}`);
-                            if (((x == 1 && y == 1) || (x == 1 && y == 0) || (x == 0 && y == 1)) && !tempSquare1.classList.contains(`white`))
+                            if (((x == 1 && y == 1) || (x == 1 && y == 0) || (x == 0 && y == 1)) && !tempSquare1.classList.contains(`white`) && validMove(square, tempSquare1))
                             {
                                 overlayDot(tempSquare1);
                             }
@@ -194,27 +195,27 @@ board.addEventListener(`click`, (ev) =>
                     var tempSquare4 = document.getElementById(`${tempX2}${tempY1}`);
                     var tempSquare5 = document.getElementById(`${tempX1}${startY}`);
                     var tempSquare6 = document.getElementById(`${tempX2}${startY}`);
-                    if (tempSquare1.innerText == ``)
+                    if (tempSquare1.innerText == `` && validMove(square, tempSquare1))
                     {
                         overlayDot(tempSquare1);
-                        if (tempSquare2.innerText == `` && square.id.substring(1,2) == `7`)
+                        if (tempSquare2.innerText == `` && square.id.substring(1,2) == `7` && validMove(square, tempSquare2))
                         {
                             overlayDot(tempSquare2);
                         }
                     }
-                    if (tempX1 < 9 && tempSquare3.classList.contains(`white`))
+                    if (tempX1 < 9 && tempSquare3.classList.contains(`white`) && validMove(square, tempSquare3))
                     {
                         overlayDot(tempSquare3);
                     }
-                    if (tempX2 > 0 && tempSquare4.classList.contains(`white`))
+                    if (tempX2 > 0 && tempSquare4.classList.contains(`white`) && validMove(square, tempSquare4))
                     {
                         overlayDot(tempSquare4);
                     }
-                    if (tempX1 < 9 && tempSquare5.innerText == `♙` && previousSquare.id == tempSquare5.id && previousLastSquare.id.substring(1,2) == `2`)
+                    if (tempX1 < 9 && tempSquare5.innerText == `♙` && previousSquare.id == tempSquare5.id && previousLastSquare.id.substring(1,2) == `2` && validMove(square, tempSquare3))
                     {
                         overlayDot(tempSquare3);
                     }
-                    if (tempX2 > 0 && tempSquare6.innerText == `♙` && previousSquare.id == tempSquare6.id && previousLastSquare.id.substring(1,2) == `2`)
+                    if (tempX2 > 0 && tempSquare6.innerText == `♙` && previousSquare.id == tempSquare6.id && previousLastSquare.id.substring(1,2) == `2` && validMove(square, tempSquare4))
                     {
                         overlayDot(tempSquare4);
                     }
@@ -231,7 +232,7 @@ board.addEventListener(`click`, (ev) =>
                             var x = Math.abs(startX - i);
                             var y = Math.abs(startY - j);
                             var tempSquare1 = document.getElementById(`${i}${j}`);
-                            if (x * y == 2 && !tempSquare1.classList.contains(`black`))
+                            if (x * y == 2 && !tempSquare1.classList.contains(`black`) && validMove(square, tempSquare1))
                             {
                                 overlayDot(tempSquare1);
                             }
@@ -250,7 +251,7 @@ board.addEventListener(`click`, (ev) =>
                             var x = Math.abs(startX - i);
                             var y = Math.abs(startY - j);
                             var tempSquare1 = document.getElementById(`${i}${j}`);
-                            if (canMove(x, y, `♝`) && testSquares(startX, startY, i, j, `♝`) && !tempSquare1.classList.contains(`black`))
+                            if (canMove(x, y, `♝`) && testSquares(startX, startY, i, j, `♝`) && !tempSquare1.classList.contains(`black`) && validMove(square, tempSquare1))
                             {
                                 overlayDot(tempSquare1);
                             }
@@ -269,7 +270,7 @@ board.addEventListener(`click`, (ev) =>
                             var x = Math.abs(startX - i);
                             var y = Math.abs(startY - j);
                             var tempSquare1 = document.getElementById(`${i}${j}`);
-                            if (canMove(x, y, `♜`) && testSquares(startX, startY, i, j, `♜`) && !tempSquare1.classList.contains(`black`))
+                            if (canMove(x, y, `♜`) && testSquares(startX, startY, i, j, `♜`) && !tempSquare1.classList.contains(`black`) && validMove(square, tempSquare1))
                             {
                                 overlayDot(tempSquare1);
                             }
@@ -288,7 +289,7 @@ board.addEventListener(`click`, (ev) =>
                             var x = Math.abs(startX - i);
                             var y = Math.abs(startY - j);
                             var tempSquare1 = document.getElementById(`${i}${j}`);
-                            if (canMove(x, y, `♛`) && testSquares(startX, startY, i, j, `♛`) && !tempSquare1.classList.contains(`black`))
+                            if (canMove(x, y, `♛`) && testSquares(startX, startY, i, j, `♛`) && !tempSquare1.classList.contains(`black`) && validMove(square, tempSquare1))
                             {
                                 overlayDot(tempSquare1);
                             }
@@ -307,7 +308,7 @@ board.addEventListener(`click`, (ev) =>
                             var x = Math.abs(startX - i);
                             var y = Math.abs(startY - j);
                             var tempSquare1 = document.getElementById(`${i}${j}`);
-                            if (((x == 1 && y == 1) || (x == 1 && y == 0) || (x == 0 && y == 1)) && !tempSquare1.classList.contains(`black`))
+                            if (((x == 1 && y == 1) || (x == 1 && y == 0) || (x == 0 && y == 1)) && !tempSquare1.classList.contains(`black`) && validMove(square, tempSquare1))
                             {
                                 overlayDot(tempSquare1);
                             }
@@ -337,6 +338,7 @@ board.addEventListener(`click`, (ev) =>
         // Makes move
         else
         {
+            moved = true;
             // En passant
             if ((lastSquare.innerText == `♙` || lastSquare.innerText == `♟`) && square.innerText == `` && lastSquare.id.substring(0,1) != square.id.substring(0,1))
             {
@@ -344,24 +346,11 @@ board.addEventListener(`click`, (ev) =>
             }
 
             // Moves piece
-            if (square.innerText != ``)
-            {
-                takenPieces.push(square.innerText);
-            }
             square.innerText = lastSquare.innerText;
             lastSquare.innerText = ``;
 
-            // Checks for win
-            if (takenPieces[length - 1] == `♔`)
-            {
-                alert(`Black wins!`);
-                location.reload();
-            }
-            if (takenPieces[length - 1] == `♚`)
-            {
-                alert(`White wins!`);
-                location.reload();
-            }
+            // Check for win - need to add
+            
 
             // White Castle long
             if (square.innerText == `♔` && square.id == `31`)
@@ -408,42 +397,45 @@ board.addEventListener(`click`, (ev) =>
             }
 
             // Variable/class updates
-            if (lastSquare.classList.contains(`hasNotMoved`))
+            if (moved)
             {
-                lastSquare.classList.remove(`hasNotMoved`);
-            }
-            if (lastSquare.classList.contains(`white`))
-            {
-                lastSquare.classList.remove(`white`);
-                square.classList.add(`white`);
-                if (square.classList.contains(`black`))
+                if (lastSquare.classList.contains(`hasNotMoved`))
                 {
-                    square.classList.remove(`black`);
+                    lastSquare.classList.remove(`hasNotMoved`);
                 }
-                whiteTurn = false;
-            }
-            if (lastSquare.classList.contains(`black`))
-            {
-                lastSquare.classList.remove(`black`);
-                square.classList.add(`black`);
-                if (square.classList.contains(`white`))
+                if (lastSquare.classList.contains(`white`))
                 {
-                    square.classList.remove(`white`);
+                    lastSquare.classList.remove(`white`);
+                    square.classList.add(`white`);
+                    if (square.classList.contains(`black`))
+                    {
+                        square.classList.remove(`black`);
+                    }
+                    whiteTurn = false;
                 }
-                whiteTurn = true;
-            }
-            if (lastSquare.classList.contains(`whiteKing`))
-            {
-                lastSquare.classList.remove(`whiteKing`);
-                square.classList.add(`whiteKing`);
-            }
-            if (lastSquare.classList.contains(`blackKing`))
-            {
-                lastSquare.classList.remove(`blackKing`);
-                square.classList.add(`blackKing`);
-            }
+                if (lastSquare.classList.contains(`black`))
+                {
+                    lastSquare.classList.remove(`black`);
+                    square.classList.add(`black`);
+                    if (square.classList.contains(`white`))
+                    {
+                        square.classList.remove(`white`);
+                    }
+                    whiteTurn = true;
+                }
+                if (lastSquare.classList.contains(`whiteKing`))
+                {
+                    lastSquare.classList.remove(`whiteKing`);
+                    square.classList.add(`whiteKing`);
+                }
+                if (lastSquare.classList.contains(`blackKing`))
+                {
+                    lastSquare.classList.remove(`blackKing`);
+                    square.classList.add(`blackKing`);
+                }
             previousLastSquare = lastSquare;
             previousSquare = square;
+            }
             resetBoardColor();
         }
     }
@@ -453,20 +445,20 @@ board.addEventListener(`click`, (ev) =>
 
 const resetBoardColor = () =>
 {
-    for (i = 1; i < 9; i++)
-    {
-        for (j = 1; j < 9; j++)
-        {
-            if ((i + j) % 2 == 0)
-            {
-                document.getElementById(`${i}${j}`).style.backgroundColor = `#03660b`;
-            }
-            else
-            {
-                document.getElementById(`${i}${j}`).style.backgroundColor = `#eee`;
-            }
-        }
-    }
+    // for (i = 1; i < 9; i++)
+    // {
+    //     for (j = 1; j < 9; j++)
+    //     {
+    //         if ((i + j) % 2 == 0)
+    //         {
+    //             document.getElementById(`${i}${j}`).style.backgroundColor = `#03660b`;
+    //         }
+    //         else
+    //         {
+    //             document.getElementById(`${i}${j}`).style.backgroundColor = `#eee`;
+    //         }
+    //     }
+    // }
     removeOverlayDots();
     testCheck(true);
     testCheck(false);
@@ -672,8 +664,8 @@ function testCheck(isWhite)
     let KingSquare;
     if (isWhite) KingSquare = document.querySelector(`.whiteKing`);
     else KingSquare = document.querySelector(`.blackKing`);
-    let currentColor = KingSquare.style.backgroundColor;
-    KingSquare.style.backgroundColor = `red`;
+    // let currentColor = KingSquare.style.backgroundColor;
+    // KingSquare.style.backgroundColor = `red`;
     
     var startX = parseInt(KingSquare.id.substring(0,1));
     var startY = parseInt(KingSquare.id.substring(1,2));
@@ -706,7 +698,7 @@ function testCheck(isWhite)
             }
         }
     }
-    KingSquare.style.backgroundColor = currentColor;
+    // KingSquare.style.backgroundColor = currentColor;
     return false;
 }
 function testForCheck(startX, startY, isWhite)
@@ -742,4 +734,25 @@ function testForCheck(startX, startY, isWhite)
     }
     return false;
 }
+function validMove(startSquare, endSquare)
+{
+    var bool = true;
+    var tempText = square.innerText;
+    square.innerText = lastSquare.innerText;
+    lastSquare.innerText = ``;
+    if (testCheck(true) && whiteTurn)
+    {
+        bool = false
+    }
+    if (testCheck(false) && !whiteTurn)
+    {
+        bool = false
+    }
+    lastSquare.innerText = square.innerText;
+    square.innerText = tempText;
+    return bool;
+}
 
+function checkForWin() {
+    
+}
