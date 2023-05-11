@@ -2,7 +2,7 @@ var player1Turn = true;
 var isOver = false;
 var draw = false;
 const h3 = document.querySelector(`h3`);
-const buttons = document.getElementsByTagName(`button`);
+const buttons = document.getElementsByClassName(`game-button`);
 const p1Win = document.getElementById(`p1Win`);
 const p2Win = document.getElementById(`p2Win`);
 if (player1Turn) 

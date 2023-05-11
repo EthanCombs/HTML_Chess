@@ -38,7 +38,6 @@ board.addEventListener(`click`, (ev) =>
                     var tempSquare4 = document.getElementById(`${tempX2}${tempY1}`);
                     var tempSquare5 = document.getElementById(`${tempX1}${startY}`);
                     var tempSquare6 = document.getElementById(`${tempX2}${startY}`);
-                    square.style.backgroundColor = "blue";
                     if (tempSquare1.innerText == ``)
                     {
                         overlayDot(tempSquare1);
@@ -67,7 +66,6 @@ board.addEventListener(`click`, (ev) =>
                 // White Knight move
                 if (square.innerText == `♘`)
                 {
-                    square.style.backgroundColor = "blue";
                     var startX = square.id.substring(0,1);
                     var startY = square.id.substring(1,2);
                     for (i = 1; i < 9; i++)
@@ -87,7 +85,6 @@ board.addEventListener(`click`, (ev) =>
                 // White Bishop move
                 if (square.innerText == `♗`)
                 {
-                    square.style.backgroundColor = "blue";
                     var startX = parseInt(square.id.substring(0,1));
                     var startY = parseInt(square.id.substring(1,2));
                     for (i = 1; i < 9; i++)
@@ -107,7 +104,6 @@ board.addEventListener(`click`, (ev) =>
                 // White Rook move
                 if (square.innerText == `♖`)
                 {
-                    square.style.backgroundColor = "blue";
                     var startX = parseInt(square.id.substring(0,1));
                     var startY = parseInt(square.id.substring(1,2));
                     for (i = 1; i < 9; i++)
@@ -127,7 +123,6 @@ board.addEventListener(`click`, (ev) =>
                 // White Queen move
                 if (square.innerText == `♕`)
                 {
-                    square.style.backgroundColor = "blue";
                     var startX = parseInt(square.id.substring(0,1));
                     var startY = parseInt(square.id.substring(1,2));
                     for (i = 1; i < 9; i++)
@@ -147,7 +142,6 @@ board.addEventListener(`click`, (ev) =>
                 // White King move
                 if (square.innerText == `♔`)
                 {
-                    square.style.backgroundColor = "blue";
                     var startX = parseInt(square.id.substring(0,1));
                     var startY = parseInt(square.id.substring(1,2));
                     for (i = 1; i < 9; i++)
@@ -200,7 +194,6 @@ board.addEventListener(`click`, (ev) =>
                     var tempSquare4 = document.getElementById(`${tempX2}${tempY1}`);
                     var tempSquare5 = document.getElementById(`${tempX1}${startY}`);
                     var tempSquare6 = document.getElementById(`${tempX2}${startY}`);
-                    square.style.backgroundColor = "blue";
                     if (tempSquare1.innerText == ``)
                     {
                         overlayDot(tempSquare1);
@@ -229,7 +222,6 @@ board.addEventListener(`click`, (ev) =>
                 // Black Knight move
                 if (square.innerText == `♞`)
                 {
-                    square.style.backgroundColor = "blue";
                     var startX = square.id.substring(0,1);
                     var startY = square.id.substring(1,2);
                     for (i = 1; i < 9; i++)
@@ -249,7 +241,6 @@ board.addEventListener(`click`, (ev) =>
                 // Black Bishop move
                 if (square.innerText == `♝`)
                 {
-                    square.style.backgroundColor = "blue";
                     var startX = parseInt(square.id.substring(0,1));
                     var startY = parseInt(square.id.substring(1,2));
                     for (i = 1; i < 9; i++)
@@ -269,7 +260,6 @@ board.addEventListener(`click`, (ev) =>
                 // Black Rook move
                 if (square.innerText == `♜`)
                 {
-                    square.style.backgroundColor = "blue";
                     var startX = parseInt(square.id.substring(0,1));
                     var startY = parseInt(square.id.substring(1,2));
                     for (i = 1; i < 9; i++)
@@ -289,7 +279,6 @@ board.addEventListener(`click`, (ev) =>
                 // Black Queen move
                 if (square.innerText == `♛`)
                 {
-                    square.style.backgroundColor = "blue";
                     var startX = parseInt(square.id.substring(0,1));
                     var startY = parseInt(square.id.substring(1,2));
                     for (i = 1; i < 9; i++)
@@ -309,7 +298,6 @@ board.addEventListener(`click`, (ev) =>
                 // Black King move
                 if (square.innerText == `♚`)
                 {
-                    square.style.backgroundColor = "blue";
                     var startX = parseInt(square.id.substring(0,1));
                     var startY = parseInt(square.id.substring(1,2));
                     for (i = 1; i < 9; i++)

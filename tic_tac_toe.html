@@ -6,16 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tic Tac Toe</title>
     <link rel="stylesheet" href="style.css">
-    <script src="code.js" defer></script>
+    <script src="tic_tac_toe.js" defer></script>
 </head>
 <body>
     <h1>Tic Tac Toe</h1>
-    <table>
-        <tr>
+    <table class="game-table">
+        <tr class="game-tr">
             <th>Player1 Win Count</th>
             <th>Player2 Win Count</th>
         </tr>
-        <tr>
+        <tr class="game-tr">
             <td id="p1Win">0</td>
             <td id="p2Win">0</td>
         </tr>
@@ -23,20 +23,21 @@
     <h3>Player1's Turn</h3>
     <div class="grid">
         <div>
-            <button type="submit" onclick="check(this)"></button>
-            <button type="submit" onclick="check(this)"></button>
-            <button type="submit" onclick="check(this)"></button>
+            <button class="game-button" type="submit" onclick="check(this)"></button>
+            <button class="game-button" type="submit" onclick="check(this)"></button>
+            <button class="game-button" type="submit" onclick="check(this)"></button>
         </div>
         <div>
-            <button type="submit" onclick="check(this)"></button>
-            <button type="submit" onclick="check(this)"></button>
-            <button type="submit" onclick="check(this)"></button>
+            <button class="game-button" type="submit" onclick="check(this)"></button>
+            <button class="game-button" type="submit" onclick="check(this)"></button>
+            <button class="game-button" type="submit" onclick="check(this)"></button>
         </div>
         <div>
-            <button type="submit" onclick="check(this)"></button>
-            <button type="submit" onclick="check(this)"></button>
-            <button type="submit" onclick="check(this)"></button>
+            <button class="game-button" type="submit" onclick="check(this)"></button>
+            <button class="game-button" type="submit" onclick="check(this)"></button>
+            <button class="game-button" type="submit" onclick="check(this)"></button>
         </div>
     </div>
 </body>
+<h2><a href="index.html"><button class="back-button" role="button">Back to game list</button></a></h2>
 </html>
