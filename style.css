@@ -1,100 +1,195 @@
+/* chess style */
 .chess-board { 
-    border-spacing: 0; 
-    border-collapse: collapse; 
+  border-spacing: 0; 
+  border-collapse: collapse; 
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
 }
 .chess-board th { 
-    padding: .5em; 
+  padding: .5em; 
 }
 .chess-board th + th { 
-    border-bottom: 1px solid #000; 
+  border-bottom: 1px solid #000; 
 }
 .chess-board th:first-child,
 .chess-board td:last-child { 
-    border-right: 1px solid #000; 
+  border-right: 1px solid #000; 
 }
 .chess-board tr:last-child td { 
-    border-bottom: 1px solid; 
+  border-bottom: 1px solid; 
 }
 .chess-board th:empty { 
-    border: none; 
+  border: none; 
 }
 .chess-board td { 
-    width: 1.5em; 
-    height: 1.5em; 
-    text-align: center; 
-    font-size: 32px; 
-    line-height: 0;
+  width: 1.5em; 
+  height: 1.5em; 
+  text-align: center; 
+  font-size: 32px; 
+  line-height: 0;
+  cursor: pointer;
 }
 .chess-board .light { 
-    background: #eee; 
+  background: #eee; 
 }
 .chess-board .dark { 
-    background: #036b0c;
+  background: #036b0c56;
+}
+
+.overlayDot {
+  font-size: 35px;
+  position: absolute;
+  z-index: 9;
+  color: #999999a6;
+  pointer-events: none;
+  width: 48px;
+  height: auto;
+  text-align: center;
+}
+
+.popup {
+  position: relative;
+  text-align: center;
+  width: 100%;
+}
+.formPopup {
+  display: none;
+  position: fixed;
+  left: 45%;
+  top: 5%;
+  transform: translate(-50%, 5%);
+  border: 3px solid #999999;
+  z-index: 9;
+  max-width: 230px;
+  max-height: 250px;
+  background-color: #fff;
+}
+.formPopup .btn {
+  border: none;
+  background-color: #8ebf42;
+  cursor: pointer;
+  width: 50%;
+  height: 68px;
+  opacity: 0.8;
+  font-size: 30px;
+  line-height: 0;
+}
+.formPopup .btn:hover,
+.openButton:hover {
+  opacity: 1;
 }
 
 * {
-    box-sizing: border-box;
+  text-align: center;
+  box-sizing: border-box;
 }
-  .openBtn {
-    display: flex;
-    justify-content: left;
+
+/* tic tac toe style */
+.game-button {
+  height: 80px;
+  width: 80px;
+  color: #000;
+  background-color: rgb(255, 255, 255);
+  border: 1px solid black;
+  font-size: x-large;
+  background-image: radial-gradient( circle farthest-corner at 10% 20%,  rgba(37,145,251,0.98) 0.1%, rgba(0,7,128,1) 99.8% );
 }
-  .openButton {
-    border: none;
-    border-radius: 5px;
-    background-color: #1c87c9;
-    color: white;
-    padding: 14px 20px;
-    cursor: pointer;
-    position: fixed;
+
+/* back button style from https://getcssscan.com/css-buttons-examples */
+.back-button {
+  font-size: medium;
+  height: auto;
+  width: auto;
+  padding: 0.6em 2em;
+  border: none;
+  outline: none;
+  color: rgb(255, 255, 255);
+  background: #111;
+  cursor: pointer;
+  position: relative;
+  z-index: 0;
+  border-radius: 10px;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
 }
-  .loginPopup {
-    position: relative;
-    text-align: center;
-    width: 100%;
+
+.back-button:before {
+  content: "";
+  background: linear-gradient(
+      45deg,
+      #ff0000,
+      #ff7300,
+      #fffb00,
+      #48ff00,
+      #00ffd5,
+      #002bff,
+      #7a00ff,
+      #ff00c8,
+      #ff0000
+  );
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  background-size: 400%;
+  z-index: -1;
+  filter: blur(5px);
+  -webkit-filter: blur(5px);
+  width: calc(100% + 4px);
+  height: calc(100% + 4px);
+  animation: glowing-back-button 20s linear infinite;
+  transition: opacity 0.3s ease-in-out;
+  border-radius: 10px;
 }
-  .formPopup {
-    display: none;
-    position: fixed;
-    left: 45%;
-    top: 5%;
-    transform: translate(-50%, 5%);
-    border: 3px solid #999999;
-    z-index: 9;
+
+@keyframes glowing-back-button {
+  0% {
+      background-position: 0 0;
+  }
+  50% {
+      background-position: 400% 0;
+  }
+  100% {
+      background-position: 0 0;
+  }
 }
-  .formContainer {
-    max-width: 300px;
-    padding: 20px;
-    background-color: #fff;
+
+.back-button:after {
+z-index: -1;
+content: "";
+position: absolute;
+width: 100%;
+height: 100%;
+background: #222;
+left: 0;
+top: 0;
+border-radius: 10px;
 }
-  .formContainer input[type=text],
-  .formContainer input[type=password] {
-    width: 100%;
-    padding: 15px;
-    margin: 5px 0 20px 0;
-    border: none;
-    background: #eee;
+
+.grid {
+  width: 240px;
+  display: grid;
+  grid-template-columns: repeat(3, 80px);
+  font-size: 0px;
+  margin-left: auto;
+  margin-right: auto;
 }
-  .formContainer input[type=text]:focus,
-  .formContainer input[type=password]:focus {
-    background-color: #ddd;
-    outline: none;
+.game-table {
+  margin-left: auto;
+  margin-right: auto;
+  border: 1px solid black;
 }
-  .formContainer .btn {
-    padding: 12px 20px;
-    border: none;
-    background-color: #8ebf42;
-    color: #fff;
-    cursor: pointer;
-    width: 100%;
-    margin-bottom: 15px;
-    opacity: 0.8;
+.game-tr td {
+  border: 1px solid black;
 }
-  .formContainer .cancel {
-    background-color: #cc0000;
+.game-tr th {
+  border: 1px solid black;
 }
-  .formContainer .btn:hover,
-  .openButton:hover {
-    opacity: 1;
+body {
+  background-image: radial-gradient( circle 975px at 2.6% 48.3%,  rgba(0,8,120,1) 0%, rgba(95,184,224,1) 99.7% );
 }
- 
+img {
+  width: 25%;
+  height: auto;
+}
