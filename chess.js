@@ -2,23 +2,36 @@ const board = document.getElementById("chess-board");
 var previousSquare; // previous move end square
 var previousLastSquare; // previous move start square
 var lastSquare; // start square
-var square = document.getElementById(`81`); // end square
+var square = document.getElementById(`18`); // end square
 var whiteTurn = true;
 var takenPieces = [];
 var promotion = false;
+var boardRect = board.getBoundingClientRect();
 var rect = square.getBoundingClientRect();
-var bodyRect = document.body.getBoundingClientRect();
+var boardX = boardRect.left;
+var boardY = boardRect.top;
+var centerX = rect.left + 28 - boardX;
+var centerY = rect.top + 28 - boardY;
 const h3 = document.querySelector(`h3`);
 var moved;
+var notTest = true;
+var dotTest = false;
+var oldClickWasNotMove = true;
+var p1Name = "White";
+var p2Name = "Black";
+var gameOver = false;
+const gameOverDiv = document.getElementById(`gameOverPopup`);
 
-board.addEventListener(`click`, (ev) =>
+document.body.addEventListener(`click`, (ev) =>
 {
+    dotTest = false;
     square = ev.target;
-    if (!promotion)
+    if (!promotion && !gameOver)
     {
         // Shows possible moves
         if (!testForDot(square))
         {
+            if (notTest) oldClickWasNotMove = true;
             resetBoardColor();
             lastSquare = square;
             if (whiteTurn)
@@ -38,10 +51,10 @@ board.addEventListener(`click`, (ev) =>
                     var tempSquare4 = document.getElementById(`${tempX2}${tempY1}`);
                     var tempSquare5 = document.getElementById(`${tempX1}${startY}`);
                     var tempSquare6 = document.getElementById(`${tempX2}${startY}`);
-                    if (tempSquare1.innerText == ``)
+                    if (tempSquare1.innerText == `` && validMove(square, tempSquare1))
                     {
-                        if (validMove(square, tempSquare1)) overlayDot(tempSquare1);
-                        if (tempSquare2.innerText == `` && square.id.substring(1,2) == `2` && validMove(square, tempSquare2))
+                        overlayDot(tempSquare1);
+                        if (square.id.substring(1,2) == `2` && validMove(square, tempSquare2) && tempSquare2.innerText == ``)
                         {
                             overlayDot(tempSquare2);
                         }
@@ -194,10 +207,10 @@ board.addEventListener(`click`, (ev) =>
                     var tempSquare4 = document.getElementById(`${tempX2}${tempY1}`);
                     var tempSquare5 = document.getElementById(`${tempX1}${startY}`);
                     var tempSquare6 = document.getElementById(`${tempX2}${startY}`);
-                    if (tempSquare1.innerText == ``)
+                    if (tempSquare1.innerText == `` && validMove(square, tempSquare1))
                     {
-                        if (validMove(square, tempSquare1)) overlayDot(tempSquare1);
-                        if (tempSquare2.innerText == `` && square.id.substring(1,2) == `7` && validMove(square, tempSquare2))
+                        overlayDot(tempSquare1);
+                        if (square.id.substring(1,2) == `7` && tempSquare2.innerText == `` && validMove(square, tempSquare2))
                         {
                             overlayDot(tempSquare2);
                         }
@@ -337,6 +350,7 @@ board.addEventListener(`click`, (ev) =>
         // Makes move
         else
         {
+            oldClickWasNotMove = false;
             moved = true;
             // En passant
             if ((lastSquare.innerText == `♙` || lastSquare.innerText == `♟`) && square.innerText == `` && lastSquare.id.substring(0,1) != square.id.substring(0,1))
@@ -433,32 +447,32 @@ board.addEventListener(`click`, (ev) =>
             previousSquare = square;
             }
             resetBoardColor();
+            if (notTest && !promotion)
+            {
+                if (whiteTurn) checkForWin(true);
+                else checkForWin(false);
+            }
         }
     }
-    // checkForWin();
-    if (whiteTurn) h3.innerText = `White's Turn`;
-    else h3.innerText = `Black's Turn`;
 });
 
 const resetBoardColor = () =>
 {
-    // for (i = 1; i < 9; i++)
-    // {
-    //     for (j = 1; j < 9; j++)
-    //     {
-    //         if ((i + j) % 2 == 0)
-    //         {
-    //             document.getElementById(`${i}${j}`).style.backgroundColor = `#03660b`;
-    //         }
-    //         else
-    //         {
-    //             document.getElementById(`${i}${j}`).style.backgroundColor = `#eee`;
-    //         }
-    //     }
-    // }
+    for (i = 1; i < 9; i++)
+    {
+        for (j = 1; j < 9; j++)
+        {
+            if ((i + j) % 2 == 0)
+            {
+                document.getElementById(`${i}${j}`).style.backgroundColor = `#036b0c56`;
+            }
+            else
+            {
+                document.getElementById(`${i}${j}`).style.backgroundColor = `#eee`;
+            }
+        }
+    }
     removeOverlayDots();
-    testCheck(true);
-    testCheck(false);
 }
 
 const testSquares = (startX, startY, endX, endY, piece) =>
@@ -577,12 +591,10 @@ const testSquares = (startX, startY, endX, endY, piece) =>
     }
     return true;
 }
-
 const canMove = (absX, absY, piece) =>
 {
     return ((absX / absY == 1 && (piece == `♗` || piece == `♝` || piece == `♛` || piece == `♕`)) ||  ((absX > 0 && absY == 0 || absX == 0 && absY > 0) && (piece == `♜` || piece == `♖` || piece == `♕` || piece == `♛`)))
 }
-
 function openWhiteForm()
 {
    promotion = true;
@@ -620,18 +632,21 @@ function promotePiece(piece)
     closeForm();
     promotion = false;
 }
-
 function overlayDot(square) 
 {
+    boardRect = board.getBoundingClientRect();
+    rect = square.getBoundingClientRect();
+    boardX = boardRect.left;
+    boardY = boardRect.top;
+    centerX = rect.left - boardX;
+    centerY = rect.top - boardY;
     const div = document.createElement(`div`);
     div.innerText = `•`;
     div.classList.add(`overlayDot`);
-    rect = square.getBoundingClientRect();
-    var topOffset = rect.top - bodyRect.top;
-    var leftOffset = rect.left - bodyRect.left;
-    div.style.left = `${leftOffset - 54}px`;
-    div.style.top = `${topOffset - 94}px`;
+    div.style.left = `${centerX}px`;
+    div.style.top = `${centerY}px`;
     document.querySelector(`.chess-board`).appendChild(div);
+    dotTest = true;
 }
 function removeOverlayDots()
 {
@@ -647,13 +662,15 @@ function removeOverlayDots()
 function testForDot(square)
 {
     rect = square.getBoundingClientRect();
-    var topOffset = rect.top - bodyRect.top;
-    var leftOffset = rect.left - bodyRect.left;
+    boardX = boardRect.left;
+    boardY = boardRect.top;
+    centerX = rect.left - boardX;
+    centerY = rect.top - boardY;
     const divList = document.getElementsByClassName(`overlayDot`);
     for(const div of divList)
     {
-        var test1 = Math.floor(parseInt(div.style.left.substring(0,6))) == Math.floor(leftOffset - 54);
-        var test2 = Math.floor(parseInt(div.style.top.substring(0,6))) == Math.floor(topOffset - 94);
+        var test1 = Math.floor(parseInt(div.style.left.substring(0,6)))  == Math.floor(centerX);
+        var test2 = Math.floor(parseInt(div.style.top.substring(0,6))) == Math.floor(centerY);
         if (test1 && test2) return true;
     }
     return false;
@@ -663,8 +680,6 @@ function testCheck(isWhite)
     let KingSquare;
     if (isWhite) KingSquare = document.querySelector(`.whiteKing`);
     else KingSquare = document.querySelector(`.blackKing`);
-    // let currentColor = KingSquare.style.backgroundColor;
-    // KingSquare.style.backgroundColor = `red`;
     
     var startX = parseInt(KingSquare.id.substring(0,1));
     var startY = parseInt(KingSquare.id.substring(1,2));
@@ -697,7 +712,6 @@ function testCheck(isWhite)
             }
         }
     }
-    // KingSquare.style.backgroundColor = currentColor;
     return false;
 }
 function validMove(startSquare, endSquare)
@@ -738,175 +752,185 @@ function validMove(startSquare, endSquare)
     }
     return bool;
 }
-// function whiteValidMoves() {
-//     for (var i = 1; i < 9; i++)
-//     {
-//         for (var j = 1; j < 9; j++)
-//         {
-//             var square = document.getElementById(`${i}${j}`);
-//             if (square.classList.contains(`white`))
-//             {
-//                 for (var x = 1; x < 9; x++)
-//                 {
-//                     for (var y = 1; y < 9; y++)
-//                     {
-//                         var absX = Math.abs(i - x);
-//                         var absY = Math.abs(j - y);
-//                         var tempSquare = document.getElementById(`${x}${y}`);
-//                         if (square.innerText = `♔`)
-//                         {
-//                             if (((absX == 1 && absY == 1) || (absX == 1 && absY == 0) || (absX == 0 && absY == 1)) && validMove(square, tempSquare))
-//                             {
-//                                 return true;
-//                             }
-//                         }
-//                         else if (square.innerText = `♘`)
-//                         {
-//                             if (absX * absY == 2 && !tempSquare.classList.contains(`white`) && validMove(square, tempSquare))
-//                             {
-//                                 return true;
-//                             }
-//                         }
-//                         else if (square.innerText = `♙`)
-//                         {
-//                             var tempY1 = parseInt(j) + 1;
-//                             var tempY2 = parseInt(j) + 2;
-//                             var tempX1 = parseInt(i) + 1;
-//                             var tempX2 = parseInt(i) - 1;
-//                             var tempSquare1 = document.getElementById(`${i}${tempY1}`);
-//                             var tempSquare2 = document.getElementById(`${i}${tempY2}`);
-//                             var tempSquare3 = document.getElementById(`${tempX1}${tempY1}`);
-//                             var tempSquare4 = document.getElementById(`${tempX2}${tempY1}`);
-//                             var tempSquare5 = document.getElementById(`${tempX1}${j}`);
-//                             var tempSquare6 = document.getElementById(`${tempX2}${j}`);
-//                             if (tempSquare1.innerText == ``)
-//                             {
-//                                 if (validMove(square, tempSquare1)) return true;
-//                                 if (tempSquare2.innerText == `` && square.id.substring(1,2) == `2` && validMove(square, tempSquare2))
-//                                 {
-//                                     return true;
-//                                 }
-//                             }
-//                             if (tempX1 < 9 && tempSquare3.classList.contains(`black`) && validMove(square, tempSquare3))
-//                             {
-//                                 return true;
-//                             }
-//                             if (tempX2 > 0 && tempSquare4.classList.contains(`black`) && validMove(square, tempSquare4))
-//                             {
-//                                 return true;
-//                             }
-//                             if (tempX1 < 9 && tempSquare5.innerText == `♟` && previousSquare.id == tempSquare5.id && previousLastSquare.id.substring(1,2) == `7` && validMove(square, tempSquare3))
-//                             {
-//                                 return true;
-//                             }
-//                             if (tempX2 > 0 && tempSquare6.innerText == `♟` && previousSquare.id == tempSquare6.id && previousLastSquare.id.substring(1,2) == `7` && validMove(square, tempSquare4))
-//                             {
-//                                 return true;
-//                             }
-//                         }
-//                         else{
-//                             if (canMove(absX, absY, square.innerText) && validMove(square, tempSquare) && testSquares(i, j, x, y, square.innerText))
-//                             {
-//                                 return true;
-//                             }
-//                         }
-//                     }
-//                 }
-//             }
-//         }
-//     }
-//     return false;
-// }
-// function blackValidMoves() {
-//     for (var i = 1; i < 9; i++)
-//     {
-//         for (var j = 1; j < 9; j++)
-//         {
-//             var square = document.getElementById(`${i}${j}`);
-//             if (square.classList.contains(`black`))
-//             {
-//                 for (var x = 1; x < 9; x++)
-//                 {
-//                     for (var y = 1; y < 9; y++)
-//                     {
-//                         var absX = Math.abs(i - x);
-//                         var absY = Math.abs(j - y);
-//                         var tempSquare = document.getElementById(`${x}${y}`);
-//                         if (square.innerText = `♔`)
-//                         {
-//                             if (((absX == 1 && absY == 1) || (absX == 1 && absY == 0) || (absX == 0 && absY == 1)) && validMove(square, tempSquare))
-//                             {
-//                                 return true;
-//                             }
-//                         }
-//                         else if (square.innerText = `♘`)
-//                         {
-//                             if (absX * absY == 2 && !tempSquare.classList.contains(`black`) && validMove(square, tempSquare))
-//                             {
-//                                 return true;
-//                             }
-//                         }
-//                         else if (square.innerText = `♙`)
-//                         {
-//                             var tempY1 = parseInt(j) + 1;
-//                             var tempY2 = parseInt(j) + 2;
-//                             var tempX1 = parseInt(i) + 1;
-//                             var tempX2 = parseInt(i) - 1;
-//                             var tempSquare1 = document.getElementById(`${i}${tempY1}`);
-//                             var tempSquare2 = document.getElementById(`${i}${tempY2}`);
-//                             var tempSquare3 = document.getElementById(`${tempX1}${tempY1}`);
-//                             var tempSquare4 = document.getElementById(`${tempX2}${tempY1}`);
-//                             var tempSquare5 = document.getElementById(`${tempX1}${j}`);
-//                             var tempSquare6 = document.getElementById(`${tempX2}${j}`);
-//                             if (tempSquare1.innerText == ``)
-//                             {
-//                                 if (validMove(square, tempSquare1)) return true;
-//                                 if (tempSquare2.innerText == `` && square.id.substring(1,2) == `2` && validMove(square, tempSquare2))
-//                                 {
-//                                     return true;
-//                                 }
-//                             }
-//                             if (tempX1 < 9 && tempSquare3.classList.contains(`white`) && validMove(square, tempSquare3))
-//                             {
-//                                 return true;
-//                             }
-//                             if (tempX2 > 0 && tempSquare4.classList.contains(`white`) && validMove(square, tempSquare4))
-//                             {
-//                                 return true;
-//                             }
-//                             if (tempX1 < 9 && tempSquare5.innerText == `♟` && previousSquare.id == tempSquare5.id && previousLastSquare.id.substring(1,2) == `7` && validMove(square, tempSquare3))
-//                             {
-//                                 return true;
-//                             }
-//                             if (tempX2 > 0 && tempSquare6.innerText == `♟` && previousSquare.id == tempSquare6.id && previousLastSquare.id.substring(1,2) == `7` && validMove(square, tempSquare4))
-//                             {
-//                                 return true;
-//                             }
-//                         }
-//                         else{
-//                             if (canMove(absX, absY, square.innerText) && validMove(square, tempSquare) && testSquares(i, j, x, y, square.innerText))
-//                             {
-//                                 return true;
-//                             }
-//                         }
-//                     }
-//                 }
-//             }
-//         }
-//     }
-//     return false;
-// }
-// function checkForWin() {
-//     if (!whiteValidMoves())
-//     {
-//         if (testCheck(true)) alert(`Black won by checkmate!`);
-//         else alert(`Draw by stalemate!`);
-//         location.reload;
-//     }
-//     if (!blackValidMoves())
-//     {
-//         if (testCheck(false)) alert(`White won by checkmate!`);
-//         else alert(`Draw by stalemate!`);
-//         location.reload;
-//     }
-// }
+function checkForWin(isWhite)
+{
+    var oldSquare = square;
+    var isNoValidMove = true;
+    if (isWhite) var temp = `white`;
+    else var temp = `black`;
+    notTest = false;
+    for (var i = 1; i < 9; i++)
+    {
+        for (var j = 1; j < 9; j++)
+        {
+            var tempSquare = document.getElementById(`${i}${j}`);
+            if (tempSquare.classList.contains(temp))
+            {
+                tempSquare.click();
+                if (dotTest) isNoValidMove = false;
+            }
+        }
+    }
+    square = oldSquare;
+    if (oldClickWasNotMove) square.click();
+    else removeOverlayDots();
+    notTest = true;
+    if (isNoValidMove && testCheck(isWhite)) 
+    {
+        showGameOver(!isWhite, false);
+    }
+    else if (isNoValidMove)
+    {
+        showGameOver(true, true);
+    }
+}
+function resetBoard(newGame)
+{
+    for (var i = 1; i < 9; i++)
+    {
+        for (var j = 1; j < 9; j++)
+        {
+            var resetSquare = document.getElementById(`${i}${j}`);
+            resetSquare.innerText = ``;
+            resetSquare.removeAttribute("class");
+            if (j == 1)
+            {
+                if (i == 1 || i == 8) 
+                {
+                    resetSquare.innerText = `♖`;
+                    resetSquare.classList.add(`white`, `hasNotMoved`);
+                }
+                if (i == 2 || i == 7) 
+                {
+                    resetSquare.innerText = `♘`;
+                    resetSquare.classList.add(`white`);
+                }
+                if (i == 3 || i == 6) 
+                {
+                    resetSquare.innerText = `♗`;
+                    resetSquare.classList.add(`white`);
+                }
+                if (i == 4) 
+                {
+                    resetSquare.innerText = `♕`;
+                    resetSquare.classList.add(`white`);
+                }
+                if (i == 5) 
+                {
+                    resetSquare.innerText = `♔`;
+                    resetSquare.classList.add(`white`, `hasNotMoved`, `whiteKing`);
+                }
+            }
+            if (j == 2) 
+            {
+                resetSquare.innerText = `♙`;
+                resetSquare.classList.add(`white`);
+            }
+            if (j == 8)
+            {
+                if (i == 1 || i == 8) 
+                {
+                    resetSquare.innerText = `♜`;
+                    resetSquare.classList.add(`black`, `hasNotMoved`);
+                }
+                if (i == 2 || i == 7) 
+                {
+                    resetSquare.innerText = `♞`;
+                    resetSquare.classList.add(`black`);
+                }
+                if (i == 3 || i == 6) 
+                {
+                    resetSquare.innerText = `♝`;
+                    resetSquare.classList.add(`black`);
+                }
+                if (i == 4) 
+                {
+                    resetSquare.innerText = `♛`;
+                    resetSquare.classList.add(`black`);
+                }
+                if (i == 5) 
+                {
+                    resetSquare.innerText = `♚`;
+                    resetSquare.classList.add(`black`, `hasNotMoved`, `blackKing`);
+                }
+            }
+            if (j == 7) 
+            {
+                resetSquare.innerText = `♟`;
+                resetSquare.classList.add(`black`);
+            }
+        }
+    }
+    whiteTurn = true;
+    whiteTime = 120;
+    blackTime = 120;
+    previousSquare = null;
+    previousLastSquare = null;
+    lastSquare = null;
+    takenPieces = [];
+    promotion = false;
+    notTest = true;
+    dotTest = false;
+    oldClickWasNotMove = true;
+    closeForm();
+    gameOverDiv.style.display = `none`;
+    gameOver = false;
+    if (newGame)
+    {
+        p1Name = `White`;
+        p2Name = `Black`;
+        document.getElementById(`player1Name`).innerText = p1Name;
+        document.getElementById(`player2Name`).innerText = p2Name;
+    }
+}
+
+// Clocks
+const whiteClock = document.getElementById(`whiteClock`);
+const blackClock = document.getElementById(`blackClock`);
+let whiteTime = 120;
+let blackTime = 120;
+let temp;
+const whiteTimer = setInterval(() => {
+    if (whiteTime != 0)
+    {
+        if (whiteTime % 60 < 10) temp = 0;
+        else temp = ``;
+        whiteClock.innerText = ` ` + Math.floor(whiteTime / 60) + `:` + temp + whiteTime % 60;
+        if (whiteTurn && !gameOver) whiteTime--;
+    }
+    else 
+    {
+        whiteClock.innerText = ` TIME IS UP`;
+        showGameOver(false);
+    }
+}, 1000);
+const blackTimer = setInterval(() => {
+    if (blackTime != 0)
+    {
+        if (blackTime % 60 < 10) temp = 0;
+        else temp = ``;
+        blackClock.innerText = ` ` + Math.floor(blackTime / 60) + `:` + temp + blackTime % 60;
+        if (!whiteTurn && !gameOver) blackTime--;
+    }
+    else 
+    {
+        blackClock.innerText = ` TIME IS UP`;
+        showGameOver(true);
+    }
+}, 1000);
+function nameFormSubmit()
+{
+    document.getElementById(`nameForm`).style.display = `none`;
+    p1Name = document.getElementById(`name1Input`).value || `White`;
+    p2Name = document.getElementById(`name2Input`).value || `Black`;
+    document.getElementById(`player1Name`).innerText = p1Name;
+    document.getElementById(`player2Name`).innerText = p2Name;
+}
+function showGameOver(whiteWon, draw)
+{
+    gameOver = true;
+    if (whiteWon) gameOverDiv.firstChild.innerText = `Game Over, ${p1Name} Won!`;
+    else document.getElementById(`gameOverPopupText`).innerText = `Game Over, ${p2Name} Won!`;
+    if (draw) document.getElementById(`gameOverPopupText`).innerText = `Game Over, Draw!`;
+    gameOverDiv.style.display = `block`;
+}

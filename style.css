@@ -36,7 +36,6 @@
 .chess-board .dark { 
   background: #036b0c56;
 }
-
 .overlayDot {
   font-size: 35px;
   position: absolute;
@@ -46,8 +45,8 @@
   width: 48px;
   height: auto;
   text-align: center;
+  padding-top: 4px;
 }
-
 .popup {
   position: relative;
   text-align: center;
@@ -56,9 +55,8 @@
 .formPopup {
   display: none;
   position: fixed;
-  left: 45%;
-  top: 5%;
-  transform: translate(-50%, 5%);
+  left: 50%;
+  top: 50%;
   border: 3px solid #999999;
   z-index: 9;
   max-width: 230px;
@@ -192,4 +190,28 @@ body {
 img {
   width: 25%;
   height: auto;
+}
+.nameForm {
+  display: none;
+}
+.nameH3 {
+  display: flex;
+  margin-left: 45%;
+}
+.clock {
+  background-color: #000;
+  color: #eee;
+}
+#gameOverPopup {
+  position: relative;
+  text-align: center;
+  display: none;
+  position: fixed;
+  left: 41.5%;
+  top: 45%;
+  border: 3px solid #999999;
+  z-index: 9;
+  max-width: 230px;
+  max-height: 250px;
+  background-color: #fff;
 }

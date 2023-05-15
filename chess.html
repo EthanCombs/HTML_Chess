@@ -6,8 +6,15 @@
         <link rel="stylesheet" href="style.css">
     </head>
     <body>
+        <form id="nameForm">
+            <label>Player 1's Name:</label><br>
+            <input type="text" name="plr1" id="name1Input"><br>
+            <label>Player 2's Name:</label><br>
+            <input type="text" name="plr2" id="name2Input"><br>
+            <input type="button" onclick="nameFormSubmit()" value="Submit">
+        </form>
         <h1>Chess</h1>
-        <h3>White's Turn</h3>
+        <h3 class="nameH3"><p id="player2Name">Black</p> <p class="clock" id="blackClock">0:00</p></h3>
         <table class="chess-board" id="chess-board">
             <tbody>
                 <tr>
@@ -111,6 +118,7 @@
                 </tr>
             </tbody>
         </table>
+        <h3 class="nameH3"><p id="player1Name">White</p><p class="clock" id="whiteClock"> 0:00</p></h3>
     <div class="popup">
         <div class="formPopup " id="popupForm">
             <table>
@@ -125,7 +133,13 @@
             </table>
         </div>
     </div>
+    <div id="gameOverPopup">
+        <h1 id="gameOverPopupText">Game Over, White Won!</h1>
+        <button onclick="resetBoard()">Rematch</button>
+        <button onclick="resetBoard()">New Game</button>
+    </div>
     <h2><a href="index.html"><button class="back-button">Back to game list</button></a></h2>
+    <button onclick="resetBoard()">Reset Board</button>
     <script src="chess.js" defer></script>
     </body>
 </html>
