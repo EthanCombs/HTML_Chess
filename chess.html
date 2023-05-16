@@ -6,15 +6,28 @@
         <link rel="stylesheet" href="style.css">
     </head>
     <body>
-        <form id="nameForm">
-            <label>Player 1's Name:</label><br>
-            <input type="text" name="plr1" id="name1Input"><br>
-            <label>Player 2's Name:</label><br>
-            <input type="text" name="plr2" id="name2Input"><br>
-            <input type="button" onclick="nameFormSubmit()" value="Submit">
-        </form>
+        <div id="timePopupDiv">
+            <form id="timeForm">
+                <label>Player 1's Time:</label><br>
+                <input type="number" name="plr1" id="time1Input"><br><br>
+                <label>Player 2's Time:</label><br>
+                <input type="number" name="plr2" id="time2Input"><br><br><br>
+                <input type="button" onclick="timeFormSubmit()" value="Submit">
+            </form>
+        </div>
+        <div id="namePopupDiv">
+            <form id="nameForm">
+                <label>Player 1's Name:</label><br>
+                <input type="text" name="plr1" id="name1Input"><br><br>
+                <label>Player 2's Name:</label><br>
+                <input type="text" name="plr2" id="name2Input"><br><br><br>
+                <input type="button" onclick="nameFormSubmit()" value="Submit">
+            </form>
+        </div>
         <h1>Chess</h1>
+        <h3 class="takenPieces" id="takenWhitePieces"></h3>
         <h3 class="nameH3"><p id="player2Name">Black</p> <p class="clock" id="blackClock">0:00</p></h3>
+        <button onclick="showGameOver(true, false)">Resign</button>
         <table class="chess-board" id="chess-board">
             <tbody>
                 <tr>
@@ -118,7 +131,9 @@
                 </tr>
             </tbody>
         </table>
+        <button onclick="showGameOver(false, false)">Resign</button>
         <h3 class="nameH3"><p id="player1Name">White</p><p class="clock" id="whiteClock"> 0:00</p></h3>
+        <h3 class="takenPieces" id="takenBlackPieces"></h3>
     <div class="popup">
         <div class="formPopup " id="popupForm">
             <table>
@@ -135,11 +150,13 @@
     </div>
     <div id="gameOverPopup">
         <h1 id="gameOverPopupText">Game Over, White Won!</h1>
-        <button onclick="resetBoard()">Rematch</button>
-        <button onclick="resetBoard()">New Game</button>
+        <button onclick="resetBoard(false)">Rematch</button>
+        <button onclick="resetBoard(true)">New Game</button>
     </div>
     <h2><a href="index.html"><button class="back-button">Back to game list</button></a></h2>
     <button onclick="resetBoard()">Reset Board</button>
+    <button onclick="nameFormShow()">Change Names</button>
+    <button onclick="timeFormShow()">Change Times</button>
     <script src="chess.js" defer></script>
     </body>
 </html>

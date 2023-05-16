@@ -196,6 +196,7 @@ img {
 }
 .nameH3 {
   display: flex;
+  margin: 0;
   margin-left: 45%;
 }
 .clock {
@@ -207,11 +208,40 @@ img {
   text-align: center;
   display: none;
   position: fixed;
-  left: 41.5%;
-  top: 45%;
+  left: 42.5%;
+  top: 25%;
   border: 3px solid #999999;
   z-index: 9;
-  max-width: 230px;
-  max-height: 250px;
+  width: 15%;
+  height: 35%;
   background-color: #fff;
+}
+#namePopupDiv {
+  position: relative;
+  text-align: center;
+  position: fixed;
+  left: 42.5%;
+  top: 25%;
+  border: 3px solid #999999;
+  z-index: 9;
+  width: 15%;
+  height: 35%;
+  background-color: #fff;
+  padding-top: 35px;
+}
+#timePopupDiv {
+  position: relative;
+  text-align: center;
+  position: fixed;
+  left: 42.5%;
+  top: 25%;
+  border: 3px solid #999999;
+  z-index: 9;
+  width: 15%;
+  height: 35%;
+  background-color: #fff;
+  padding-top: 35px;
+}
+.takenPieces {
+  margin: 0;
 }

@@ -21,6 +21,10 @@ var p1Name = "White";
 var p2Name = "Black";
 var gameOver = false;
 const gameOverDiv = document.getElementById(`gameOverPopup`);
+const takenWhitePiecesDiv = document.getElementById(`takenWhitePieces`);
+var takenWhitePieces = ``;
+const takenBlackPiecesDiv = document.getElementById(`takenBlackPieces`);
+var takenBlackPieces = ``;
 
 document.body.addEventListener(`click`, (ev) =>
 {
@@ -350,6 +354,8 @@ document.body.addEventListener(`click`, (ev) =>
         // Makes move
         else
         {
+            if (square != `` && whiteTurn) {takenBlackPieces += square.innerText; takenBlackPiecesDiv.innerText = takenBlackPieces;}
+            if (square != `` && !whiteTurn) {takenWhitePieces += square.innerText; takenWhitePiecesDiv.innerText = takenWhitePieces;}
             oldClickWasNotMove = false;
             moved = true;
             // En passant
@@ -361,6 +367,7 @@ document.body.addEventListener(`click`, (ev) =>
             // Moves piece
             square.innerText = lastSquare.innerText;
             lastSquare.innerText = ``;
+            calcMaterialAdvantage();
 
             // White Castle long
             if (square.innerText == `♔` && square.id == `31`)
@@ -699,6 +706,7 @@ function testCheck(isWhite)
                 if (absY != 0 && absX / absY == 2 && piece == `♞`) return true;
                 if (startX + 1 == x && startY + 1 == y && piece == `♟`) return true;
                 if (startX - 1 == x && startY + 1 == y && piece == `♟`) return true;
+                if (((absX == 1 && (absY == 1 || absY == 0)) || (absY == 1 && (absX == 1 || absX == 0))) && piece == `♚`) return true;
             }
             else
             {
@@ -709,6 +717,7 @@ function testCheck(isWhite)
                 if (absY != 0 && absX / absY == 2 && piece == `♘`) return true;
                 if (startX + 1 == x && startY - 1 == y && piece == `♙`) return true;
                 if (startX - 1 == x && startY - 1 == y && piece == `♙`) return true;
+                if (((absX == 1 && (absY == 1 || absY == 0)) || (absY == 1 && (absX == 1 || absX == 0))) && piece == `♔`) return true;
             }
         }
     }
@@ -875,12 +884,17 @@ function resetBoard(newGame)
     closeForm();
     gameOverDiv.style.display = `none`;
     gameOver = false;
+    takenWhitePiecesDiv.innerText = ``;
+    takenBlackPiecesDiv.innerText = ``;
+    takenWhitePieces = ``;
+    takenBlackPieces = ``;
     if (newGame)
     {
         p1Name = `White`;
         p2Name = `Black`;
         document.getElementById(`player1Name`).innerText = p1Name;
         document.getElementById(`player2Name`).innerText = p2Name;
+        nameFormShow();
     }
 }
 
@@ -918,6 +932,12 @@ const blackTimer = setInterval(() => {
         showGameOver(true);
     }
 }, 1000);
+function nameFormShow()
+{
+    document.getElementById(`nameForm`).style.display = `block`;
+    document.getElementById(`namePopupDiv`).style.display = `block`;
+    gameOver = true;
+}
 function nameFormSubmit()
 {
     document.getElementById(`nameForm`).style.display = `none`;
@@ -925,12 +945,66 @@ function nameFormSubmit()
     p2Name = document.getElementById(`name2Input`).value || `Black`;
     document.getElementById(`player1Name`).innerText = p1Name;
     document.getElementById(`player2Name`).innerText = p2Name;
+    document.getElementById(`namePopupDiv`).style.display = `none`;
+    gameOver = false;
+}
+function timeFormShow()
+{
+    document.getElementById(`timeForm`).style.display = `block`;
+    document.getElementById(`timePopupDiv`).style.display = `block`;
+    gameOver = true;
+}
+function timeFormSubmit()
+{
+    document.getElementById(`timeForm`).style.display = `none`;
+    whiteTime = document.getElementById(`time1Input`).value || 120;
+    blackTime = document.getElementById(`time2Input`).value || 120;
+    document.getElementById(`timePopupDiv`).style.display = `none`;
+    gameOver = false;
 }
 function showGameOver(whiteWon, draw)
 {
     gameOver = true;
-    if (whiteWon) gameOverDiv.firstChild.innerText = `Game Over, ${p1Name} Won!`;
+    if (whiteWon) document.getElementById(`gameOverPopupText`).innerText = `Game Over, ${p1Name} Won!`;
     else document.getElementById(`gameOverPopupText`).innerText = `Game Over, ${p2Name} Won!`;
     if (draw) document.getElementById(`gameOverPopupText`).innerText = `Game Over, Draw!`;
     gameOverDiv.style.display = `block`;
+}
+
+function calcMaterialAdvantage()
+{
+    var whiteMat = 0;
+    var blackMat = 0;
+    for (var i = 1; i < 9; i++)
+    {
+        for (var j = 1; j < 9; j++)
+        {
+            var piece = document.getElementById(`${i}${j}`).innerText
+            if (piece == `♕`) whiteMat += 8;
+            else if (piece == `♖`) whiteMat += 5;
+            else if (piece == `♗`) whiteMat += 3;
+            else if (piece == `♘`) whiteMat += 3;
+            else if (piece == `♙`) whiteMat += 1;
+            else if (piece == `♛`) blackMat += 8;
+            else if (piece == `♜`) blackMat += 5;
+            else if (piece == `♝`) blackMat += 3;
+            else if (piece == `♞`) blackMat += 3;
+            else if (piece == `♟`) blackMat += 1;
+        }
+    }
+    var matDiff = whiteMat - blackMat;
+    if (matDiff > 0) 
+    {
+        takenWhitePiecesDiv.innerText = takenWhitePieces;
+        takenBlackPiecesDiv.innerText = takenBlackPieces + ` +` + matDiff;
+    }
+    else if (matDiff < 0) 
+    {
+        takenWhitePiecesDiv.innerText = takenWhitePieces + ` +` + Math.abs(matDiff);
+        takenBlackPiecesDiv.innerText = takenBlackPieces;
+    }
+    else 
+    {
+        takenBlackPiecesDiv.innerText = takenBlackPieces; takenWhitePiecesDiv.innerText = takenWhitePieces;
+    }
 }
