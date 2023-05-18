@@ -25,12 +25,14 @@ const takenWhitePiecesDiv = document.getElementById(`takenWhitePieces`);
 var takenWhitePieces = ``;
 const takenBlackPiecesDiv = document.getElementById(`takenBlackPieces`);
 var takenBlackPieces = ``;
+var nameFormOpen = true;
+var timeFormOpen = true;
 
 document.body.addEventListener(`click`, (ev) =>
 {
     dotTest = false;
     square = ev.target;
-    if (!promotion && !gameOver)
+    if (!promotion && !gameOver && !nameFormOpen && !timeFormOpen)
     {
         // Shows possible moves
         if (!testForDot(square))
@@ -185,11 +187,11 @@ document.body.addEventListener(`click`, (ev) =>
                         const h1 = document.getElementById(`81`);
                         if (a1.innerText == `♖` && a1.classList.contains(`hasNotMoved`) && b1.innerText == `` && c1.innerText == `` && d1.innerText == ``)
                         {
-                overlayDot(         c1);
+                            overlayDot(c1);
                         }
                         if (h1.innerText == `♖` && h1.classList.contains(`hasNotMoved`) && f1.innerText == `` && g1.innerText == ``)
                         {
-                overlayDot(         g1);
+                            overlayDot(g1);
                         }
                     }
                 }
@@ -463,6 +465,7 @@ document.body.addEventListener(`click`, (ev) =>
     }
 });
 
+// Board resets
 const resetBoardColor = () =>
 {
     for (i = 1; i < 9; i++)
@@ -481,7 +484,157 @@ const resetBoardColor = () =>
     }
     removeOverlayDots();
 }
+function resetBoard(newGame)
+{
+    for (var i = 1; i < 9; i++)
+    {
+        for (var j = 1; j < 9; j++)
+        {
+            var resetSquare = document.getElementById(`${i}${j}`);
+            resetSquare.innerText = ``;
+            resetSquare.removeAttribute("class");
+            if (j == 1)
+            {
+                if (i == 1 || i == 8) 
+                {
+                    resetSquare.innerText = `♖`;
+                    resetSquare.classList.add(`white`, `hasNotMoved`);
+                }
+                if (i == 2 || i == 7) 
+                {
+                    resetSquare.innerText = `♘`;
+                    resetSquare.classList.add(`white`);
+                }
+                if (i == 3 || i == 6) 
+                {
+                    resetSquare.innerText = `♗`;
+                    resetSquare.classList.add(`white`);
+                }
+                if (i == 4) 
+                {
+                    resetSquare.innerText = `♕`;
+                    resetSquare.classList.add(`white`);
+                }
+                if (i == 5) 
+                {
+                    resetSquare.innerText = `♔`;
+                    resetSquare.classList.add(`white`, `hasNotMoved`, `whiteKing`);
+                }
+            }
+            if (j == 2) 
+            {
+                resetSquare.innerText = `♙`;
+                resetSquare.classList.add(`white`);
+            }
+            if (j == 8)
+            {
+                if (i == 1 || i == 8) 
+                {
+                    resetSquare.innerText = `♜`;
+                    resetSquare.classList.add(`black`, `hasNotMoved`);
+                }
+                if (i == 2 || i == 7) 
+                {
+                    resetSquare.innerText = `♞`;
+                    resetSquare.classList.add(`black`);
+                }
+                if (i == 3 || i == 6) 
+                {
+                    resetSquare.innerText = `♝`;
+                    resetSquare.classList.add(`black`);
+                }
+                if (i == 4) 
+                {
+                    resetSquare.innerText = `♛`;
+                    resetSquare.classList.add(`black`);
+                }
+                if (i == 5) 
+                {
+                    resetSquare.innerText = `♚`;
+                    resetSquare.classList.add(`black`, `hasNotMoved`, `blackKing`);
+                }
+            }
+            if (j == 7) 
+            {
+                resetSquare.innerText = `♟`;
+                resetSquare.classList.add(`black`);
+            }
+        }
+    }
+    whiteTurn = true;
+    whiteTime = 120;
+    blackTime = 120;
+    previousSquare = null;
+    previousLastSquare = null;
+    lastSquare = null;
+    takenPieces = [];
+    promotion = false;
+    notTest = true;
+    dotTest = false;
+    oldClickWasNotMove = true;
+    closeForm();
+    gameOverDiv.style.display = `none`;
+    gameOver = false;
+    takenWhitePiecesDiv.innerText = ``;
+    takenBlackPiecesDiv.innerText = ``;
+    takenWhitePieces = ``;
+    takenBlackPieces = ``;
+    if (newGame)
+    {
+        p1Name = `White`;
+        p2Name = `Black`;
+        document.getElementById(`player1Name`).innerText = p1Name;
+        document.getElementById(`player2Name`).innerText = p2Name;
+        nameFormShow();
+    }
+}
 
+// Overlay Dots
+function overlayDot(square) 
+{
+    boardRect = board.getBoundingClientRect();
+    rect = square.getBoundingClientRect();
+    boardX = boardRect.left;
+    boardY = boardRect.top;
+    centerX = rect.left - boardX;
+    centerY = rect.top - boardY;
+    const div = document.createElement(`div`);
+    div.innerText = `•`;
+    div.classList.add(`overlayDot`);
+    div.style.left = `${centerX}px`;
+    div.style.top = `${centerY}px`;
+    document.querySelector(`.chess-board`).appendChild(div);
+    dotTest = true;
+}
+function removeOverlayDots()
+{
+    const divList = document.getElementsByClassName(`overlayDot`);
+    while (divList.length != 0)
+    {
+        for(const div of divList)
+        {
+            div.remove();
+        }
+    }
+}
+function testForDot(square)
+{
+    rect = square.getBoundingClientRect();
+    boardX = boardRect.left;
+    boardY = boardRect.top;
+    centerX = rect.left - boardX;
+    centerY = rect.top - boardY;
+    const divList = document.getElementsByClassName(`overlayDot`);
+    for(const div of divList)
+    {
+        var test1 = Math.floor(parseInt(div.style.left.substring(0,6)))  == Math.floor(centerX);
+        var test2 = Math.floor(parseInt(div.style.top.substring(0,6))) == Math.floor(centerY);
+        if (test1 && test2) return true;
+    }
+    return false;
+}
+
+// Piece Move Logic
 const testSquares = (startX, startY, endX, endY, piece) =>
 {
     if (startX > endX && startY > endY)
@@ -602,29 +755,6 @@ const canMove = (absX, absY, piece) =>
 {
     return ((absX / absY == 1 && (piece == `♗` || piece == `♝` || piece == `♛` || piece == `♕`)) ||  ((absX > 0 && absY == 0 || absX == 0 && absY > 0) && (piece == `♜` || piece == `♖` || piece == `♕` || piece == `♛`)))
 }
-function openWhiteForm()
-{
-   promotion = true;
-   document.getElementById("popupForm").style.display = "block";
-   for (const btn of document.getElementsByClassName(`btn`))
-   {
-    btn.style.color = `white`;
-   }
-}
-function openBlackForm()
-{
-   promotion = true;
-   document.getElementById("popupForm").style.display = "block";
-   for (const btn of document.getElementsByClassName(`btn`))
-   {
-    btn.style.color = `black`;
-   }
-
-}
-function closeForm()
-{
-   document.getElementById("popupForm").style.display = "none";
-}
 function promotePiece(piece)
 {
     if (document.getElementsByClassName(`btn`)[0].style.color == `white`)
@@ -639,49 +769,8 @@ function promotePiece(piece)
     closeForm();
     promotion = false;
 }
-function overlayDot(square) 
-{
-    boardRect = board.getBoundingClientRect();
-    rect = square.getBoundingClientRect();
-    boardX = boardRect.left;
-    boardY = boardRect.top;
-    centerX = rect.left - boardX;
-    centerY = rect.top - boardY;
-    const div = document.createElement(`div`);
-    div.innerText = `•`;
-    div.classList.add(`overlayDot`);
-    div.style.left = `${centerX}px`;
-    div.style.top = `${centerY}px`;
-    document.querySelector(`.chess-board`).appendChild(div);
-    dotTest = true;
-}
-function removeOverlayDots()
-{
-    const divList = document.getElementsByClassName(`overlayDot`);
-    while (divList.length != 0)
-    {
-        for(const div of divList)
-        {
-            div.remove();
-        }
-    }
-}
-function testForDot(square)
-{
-    rect = square.getBoundingClientRect();
-    boardX = boardRect.left;
-    boardY = boardRect.top;
-    centerX = rect.left - boardX;
-    centerY = rect.top - boardY;
-    const divList = document.getElementsByClassName(`overlayDot`);
-    for(const div of divList)
-    {
-        var test1 = Math.floor(parseInt(div.style.left.substring(0,6)))  == Math.floor(centerX);
-        var test2 = Math.floor(parseInt(div.style.top.substring(0,6))) == Math.floor(centerY);
-        if (test1 && test2) return true;
-    }
-    return false;
-}
+
+// Check and Game Over Logic
 function testCheck(isWhite)
 {
     let KingSquare;
@@ -793,110 +882,6 @@ function checkForWin(isWhite)
         showGameOver(true, true);
     }
 }
-function resetBoard(newGame)
-{
-    for (var i = 1; i < 9; i++)
-    {
-        for (var j = 1; j < 9; j++)
-        {
-            var resetSquare = document.getElementById(`${i}${j}`);
-            resetSquare.innerText = ``;
-            resetSquare.removeAttribute("class");
-            if (j == 1)
-            {
-                if (i == 1 || i == 8) 
-                {
-                    resetSquare.innerText = `♖`;
-                    resetSquare.classList.add(`white`, `hasNotMoved`);
-                }
-                if (i == 2 || i == 7) 
-                {
-                    resetSquare.innerText = `♘`;
-                    resetSquare.classList.add(`white`);
-                }
-                if (i == 3 || i == 6) 
-                {
-                    resetSquare.innerText = `♗`;
-                    resetSquare.classList.add(`white`);
-                }
-                if (i == 4) 
-                {
-                    resetSquare.innerText = `♕`;
-                    resetSquare.classList.add(`white`);
-                }
-                if (i == 5) 
-                {
-                    resetSquare.innerText = `♔`;
-                    resetSquare.classList.add(`white`, `hasNotMoved`, `whiteKing`);
-                }
-            }
-            if (j == 2) 
-            {
-                resetSquare.innerText = `♙`;
-                resetSquare.classList.add(`white`);
-            }
-            if (j == 8)
-            {
-                if (i == 1 || i == 8) 
-                {
-                    resetSquare.innerText = `♜`;
-                    resetSquare.classList.add(`black`, `hasNotMoved`);
-                }
-                if (i == 2 || i == 7) 
-                {
-                    resetSquare.innerText = `♞`;
-                    resetSquare.classList.add(`black`);
-                }
-                if (i == 3 || i == 6) 
-                {
-                    resetSquare.innerText = `♝`;
-                    resetSquare.classList.add(`black`);
-                }
-                if (i == 4) 
-                {
-                    resetSquare.innerText = `♛`;
-                    resetSquare.classList.add(`black`);
-                }
-                if (i == 5) 
-                {
-                    resetSquare.innerText = `♚`;
-                    resetSquare.classList.add(`black`, `hasNotMoved`, `blackKing`);
-                }
-            }
-            if (j == 7) 
-            {
-                resetSquare.innerText = `♟`;
-                resetSquare.classList.add(`black`);
-            }
-        }
-    }
-    whiteTurn = true;
-    whiteTime = 120;
-    blackTime = 120;
-    previousSquare = null;
-    previousLastSquare = null;
-    lastSquare = null;
-    takenPieces = [];
-    promotion = false;
-    notTest = true;
-    dotTest = false;
-    oldClickWasNotMove = true;
-    closeForm();
-    gameOverDiv.style.display = `none`;
-    gameOver = false;
-    takenWhitePiecesDiv.innerText = ``;
-    takenBlackPiecesDiv.innerText = ``;
-    takenWhitePieces = ``;
-    takenBlackPieces = ``;
-    if (newGame)
-    {
-        p1Name = `White`;
-        p2Name = `Black`;
-        document.getElementById(`player1Name`).innerText = p1Name;
-        document.getElementById(`player2Name`).innerText = p2Name;
-        nameFormShow();
-    }
-}
 
 // Clocks
 const whiteClock = document.getElementById(`whiteClock`);
@@ -910,7 +895,7 @@ const whiteTimer = setInterval(() => {
         if (whiteTime % 60 < 10) temp = 0;
         else temp = ``;
         whiteClock.innerText = ` ` + Math.floor(whiteTime / 60) + `:` + temp + whiteTime % 60;
-        if (whiteTurn && !gameOver) whiteTime--;
+        if (whiteTurn && !gameOver && !nameFormOpen && !timeFormOpen) whiteTime--;
     }
     else 
     {
@@ -924,7 +909,7 @@ const blackTimer = setInterval(() => {
         if (blackTime % 60 < 10) temp = 0;
         else temp = ``;
         blackClock.innerText = ` ` + Math.floor(blackTime / 60) + `:` + temp + blackTime % 60;
-        if (!whiteTurn && !gameOver) blackTime--;
+        if (!whiteTurn && !gameOver && !nameFormOpen && !timeFormOpen) blackTime--;
     }
     else 
     {
@@ -932,35 +917,56 @@ const blackTimer = setInterval(() => {
         showGameOver(true);
     }
 }, 1000);
+
+// Forms
+function openWhiteForm()
+{
+   promotion = true;
+   document.getElementById("popupForm").style.display = "block";
+   for (const btn of document.getElementsByClassName(`btn`))
+   {
+    btn.style.color = `white`;
+   }
+}
+function openBlackForm()
+{
+   promotion = true;
+   document.getElementById("popupForm").style.display = "block";
+   for (const btn of document.getElementsByClassName(`btn`))
+   {
+    btn.style.color = `black`;
+   }
+
+}
+function closeForm()
+{
+   document.getElementById("popupForm").style.display = "none";
+}
 function nameFormShow()
 {
-    document.getElementById(`nameForm`).style.display = `block`;
     document.getElementById(`namePopupDiv`).style.display = `block`;
-    gameOver = true;
+    nameFormOpen = true;
 }
 function nameFormSubmit()
 {
-    document.getElementById(`nameForm`).style.display = `none`;
+    document.getElementById(`namePopupDiv`).style.display = `none`;
     p1Name = document.getElementById(`name1Input`).value || `White`;
     p2Name = document.getElementById(`name2Input`).value || `Black`;
     document.getElementById(`player1Name`).innerText = p1Name;
     document.getElementById(`player2Name`).innerText = p2Name;
-    document.getElementById(`namePopupDiv`).style.display = `none`;
-    gameOver = false;
+    nameFormOpen = false;
 }
 function timeFormShow()
 {
-    document.getElementById(`timeForm`).style.display = `block`;
     document.getElementById(`timePopupDiv`).style.display = `block`;
-    gameOver = true;
+    timeFormOpen = true;
 }
 function timeFormSubmit()
 {
-    document.getElementById(`timeForm`).style.display = `none`;
+    document.getElementById(`timePopupDiv`).style.display = `none`;
     whiteTime = document.getElementById(`time1Input`).value || 120;
     blackTime = document.getElementById(`time2Input`).value || 120;
-    document.getElementById(`timePopupDiv`).style.display = `none`;
-    gameOver = false;
+    timeFormOpen = false;
 }
 function showGameOver(whiteWon, draw)
 {
@@ -970,7 +976,6 @@ function showGameOver(whiteWon, draw)
     if (draw) document.getElementById(`gameOverPopupText`).innerText = `Game Over, Draw!`;
     gameOverDiv.style.display = `block`;
 }
-
 function calcMaterialAdvantage()
 {
     var whiteMat = 0;

@@ -5,6 +5,7 @@
   margin-left: auto;
   margin-right: auto;
   position: relative;
+  min-width: 41px;
 }
 .chess-board th { 
   padding: .5em; 
@@ -213,6 +214,7 @@ img {
   border: 3px solid #999999;
   z-index: 9;
   width: 15%;
+  min-width: 200px;
   height: 35%;
   background-color: #fff;
 }
@@ -225,9 +227,11 @@ img {
   border: 3px solid #999999;
   z-index: 9;
   width: 15%;
+  min-width: fit-content;
   height: 35%;
+  max-height: fit-content;
   background-color: #fff;
-  padding-top: 35px;
+  padding: 10px;
 }
 #timePopupDiv {
   position: relative;
@@ -238,6 +242,7 @@ img {
   border: 3px solid #999999;
   z-index: 9;
   width: 15%;
+  min-width: fit-content;
   height: 35%;
   background-color: #fff;
   padding-top: 35px;
